@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {Col, Row} from "reactstrap";
-import {fetchCocktail} from "../../store/actions/cocktailsActions";
+import {fetchCocktail, rateCocktail} from "../../store/actions/cocktailsActions";
 import connect from "react-redux/es/connect/connect";
 import CocktailThumbnail from "../../components/CocktailThumbnail/CocktailThumbnail";
+import Rating from "react-rating";
 
 class CocktailDetail extends Component {
     componentDidMount() {
@@ -17,6 +18,25 @@ class CocktailDetail extends Component {
             return <div>Loading</div>
         }
 
+        let currentRate = 0;
+        let average = 0;
+        try {
+            currentRate = this.props.cocktail.rating.find(rate => rate.user === this.props.user._id).rate;
+        } catch (e) {
+            currentRate = 0;
+        }
+
+        try {
+            average = this.props.cocktail.rating.reduce((sum, rating) => {
+                return sum + rating.rate;
+            }, 0) / this.props.cocktail.rating.length;
+
+            if (isNaN(average)) {
+                throw Error;
+            }
+        } catch (e) {
+            average = 0;
+        }
         const cocktail = this.props.cocktail;
         return (
             <div className="Cocktail">
@@ -31,8 +51,17 @@ class CocktailDetail extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={12}><p>Recipe: {cocktail.recipe}</p></Col>
+                    <Col sm={12} style={{textAlign: 'center', fontSize: '20px', color: 'blue'}}>
+                        <h4>Recipe:</h4>
+                        <p >{cocktail.recipe}</p>
+                    </Col>
                 </Row>
+
+                <div className="RateDash">
+                    <h6>Rate this cocktail:</h6>
+                    <Rating initialRating={currentRate} onClick={(value) => this.props.rateCocktail(this.props.cocktail._id, value)} />
+                    <h2>Rating average: {average.toFixed(1)} stars</h2>
+                </div>
             </div>
         );
     }
@@ -44,7 +73,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchCocktail: id => dispatch(fetchCocktail(id))
+    fetchCocktail: id => dispatch(fetchCocktail(id)),
+    rateCocktail: (id, rate) => dispatch(rateCocktail(id, rate))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CocktailDetail);

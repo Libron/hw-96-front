@@ -1,5 +1,6 @@
 import axios from '../../axios-api';
 import {push} from "connected-react-router";
+import {NotificationManager} from 'react-notifications';
 
 export const FETCH_COCKTAILS_REQUEST = 'FETCH_COCKTAILS_REQUEST';
 export const FETCH_COCKTAILS_FAILURE = 'FETCH_COCKTAILS_FAILURE';
@@ -78,8 +79,10 @@ export const createCocktail = cocktailData => {
             response => {
                 dispatch(push('/'));
                 dispatch(createCocktailSuccess(response.data));
+                NotificationManager.success('Ваш коктейль находится на рассмотрении модератора');
             },
             error => {
+                NotificationManager.error('Something went wrong');
                 if (error.response) {
                     dispatch(createCocktailFailure(error.response.data));
                 } else {
@@ -95,6 +98,7 @@ export const deleteCocktail = id => {
         return axios.delete('/cocktails?id=' + id).then(
             response => {
                 dispatch(deleteCocktailSuccess(response.data));
+                NotificationManager.success('Коктейль удален успешно');
             },
             error => dispatch(deleteCocktailFailure(error)));
     };
@@ -108,5 +112,16 @@ export const publishCocktail = id => {
                 dispatch(publishCocktailSuccess(response.data));
             },
             error => dispatch(publishCocktailFailure(error)));
+    };
+};
+
+export const rateCocktail = (id, rate) => {
+    return (dispatch) => {
+        return axios.post('/cocktails/' + id + '/rate', {id, rate}).then(
+            response => {
+                dispatch(fetchCocktailSuccess(response.data));
+                NotificationManager.success('Your rate is ' + rate);
+            },
+            error => dispatch(fetchCocktailFailure(error)));
     };
 };

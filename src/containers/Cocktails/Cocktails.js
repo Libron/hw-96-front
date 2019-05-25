@@ -32,7 +32,7 @@ class Cocktails extends Component {
             <Card key={item._id}>
                 <CocktailThumbnail image={item.image}/>
                 <CardBody>
-                    {item.published ? <p><Badge>Published</Badge></p> : null}
+                    {!item.published ? <p><Badge color="danger">unpublished</Badge></p> : null}
                     <CardTitle tag={NavLink} to={'/cocktails/' + item._id}>{item.name}</CardTitle>
                     <CardText>
                         {this.props.user && this.props.user.role === 'admin' ?

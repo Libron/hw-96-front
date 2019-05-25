@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Col, Form, FormGroup, Input, Label} from "reactstrap";
+import {Button, Col, Form, FormGroup, Input, Label, Row} from "reactstrap";
 
 class CocktailForm extends Component {
     state = {
@@ -93,18 +93,23 @@ class CocktailForm extends Component {
                 </FormGroup>
 
                 <FormGroup>
-                    Ingredients:
                     {this.state.ingredients.map((ing, ndx) => (
-                        <div key={ing.key}>
-                            Name: <input type="text" name="name"
-                                         onChange={e => this.ingredientInputChangeHandler(e, ndx)} required/>
-                            Amount : <input type="text" name="amount"
-                                         onChange={e => this.ingredientInputChangeHandler(e, ndx)} required/>
-                            {ndx > 0 &&
-                            <button type="button" onClick={() => this.removeIngredient(ndx)}><b>X </b></button>}
-                        </div>
+                        <Row key={ing.key}>
+                            <Label sm={2} for="ing-name">Ingredients name</Label>
+                            <Col sm={4}>
+                                <Input type="text" name="name" id="ing-name"
+                                       onChange={e => this.ingredientInputChangeHandler(e, ndx)} required/>
+                            </Col>
+                            <Label sm={1} for="ing-amount">Amount</Label>
+                            <Col sm={4}>
+                                <Input type="text" name="amount"
+                                       onChange={e => this.ingredientInputChangeHandler(e, ndx)} required/>
+
+                            </Col>
+                            <Col sm={1}>  {ndx > 0 && <Button type="button" onClick={() => this.removeIngredient(ndx)}><b>X </b></Button>}</Col>
+                        </Row>
                     ))}
-                    <button onClick={this.addIngredient} type="button">Add ingredient</button>
+                    <Button style={{float: 'right', marginTop: '10px'}} color="warning" onClick={this.addIngredient} type="button">Add ingredient</Button>
                 </FormGroup>
 
                 <FormGroup row>
