@@ -5,12 +5,14 @@ import thunkMiddleware from "redux-thunk";
 import {loadFromLocalStorage, saveToLocalStorage} from "./localStorage";
 import axios from '../axios-api';
 import usersReducer from "./reducers/usersReducer";
+import cocktailReducer from "./reducers/cocktailsReducer";
 
 export const history = createBrowserHistory();
 
 const rootReducer = combineReducers({
   router: connectRouter(history),
-    users: usersReducer
+    users: usersReducer,
+    cocktails: cocktailReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -19,7 +19,7 @@ class FacebookLogin extends Component {
     render() {
         return (
             <FacebookLoginButton
-                appId="1340053619482671"
+                appId="649512632188535"
                 callback={this.facebookLogin}
                 fields="name,email,picture"
                 render={renderProps => (

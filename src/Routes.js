@@ -10,6 +10,8 @@ const Routes = ({user}) => {
   return (
     <Switch>
       <Route path="/" exact component={Cocktails} />
+      <Route path="/cocktails" exact component={Cocktails} />
+        <Route path="/cocktails/mylist" exact component={Cocktails} />
         <Route path="/cocktails/create" exact component={CocktailBuilder} />
         <Route path="/cocktails/:id" exact component={CocktailDetail} />
       <Route path="/register" exact component={Register}/>

@@ -2,11 +2,10 @@ import React, {Fragment} from 'react';
 import {
     DropdownItem,
     DropdownMenu,
-    DropdownToggle, FormGroup,
+    DropdownToggle,
     Nav,
     Navbar,
     NavbarBrand,
-    NavItem,
     NavLink,
     UncontrolledDropdown
 } from "reactstrap";
@@ -17,14 +16,14 @@ import FacebookLogin from "../FacebookLogin/FacebookLogin";
 
 const Toolbar = ({user, logout}) => {
     return (
-        <div>
+        <div style={{marginBottom: '50px'}}>
             <Navbar color="dark" dark expand="md">
                 <NavbarBrand tag={RouterNavLink} to="/">Mayami Бич</NavbarBrand>
                     <Nav className="ml-auto" navbar>
                         {user ? (
                             <UncontrolledDropdown nav inNavbar>
                                 <DropdownToggle nav caret>
-                                    Hello, <span><AvatarThumbnail fb={user.facebookId} image={user.avatarImage}/> {user.displayName}</span>
+                                    Hello, <span><AvatarThumbnail fb={user.facebookId} image={user.avatar}/> {user.name}</span>
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem>
@@ -33,7 +32,7 @@ const Toolbar = ({user, logout}) => {
                                         </NavLink>
                                     </DropdownItem>
                                     <DropdownItem>
-                                        <NavLink tag={RouterNavLink} to='/cocktails/mylist' style={{color:'black'}} >
+                                        <NavLink tag={RouterNavLink} to={`/cocktails?uid=${user._id}`} style={{color:'black'}} >
                                             My cocktails
                                         </NavLink>
                                     </DropdownItem>

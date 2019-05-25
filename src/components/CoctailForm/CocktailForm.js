@@ -4,23 +4,27 @@ import {Button, Col, Form, FormGroup, Input, Label} from "reactstrap";
 class CocktailForm extends Component {
     state = {
         name: '',
-        ingredients: [],
-        description: '',
         recipe: '',
-        image: null
+        ingredients: [
+            {name: '', amount: '', key: Math.random().toString()}
+        ],
+        image: null,
     };
 
     submitFormHandler = event => {
         event.preventDefault();
 
         const formData = new FormData();
-        console.log(formData);
+        Object.keys(this.state).forEach(key => {
+            if (key === 'ingredients') {
+                const arr = JSON.stringify(this.state[key]);
+                formData.append(key, arr);
+            } else {
+                formData.append(key, this.state[key]);
+            }
+        });
 
-        // Object.keys(this.state).forEach(key => {
-        //     formData.append(key, this.state[key]);
-        // });
-
-        // this.props.onSubmit(formData);
+        this.props.submit(formData);
     };
 
     inputChangeHandler = event => {
@@ -33,6 +37,30 @@ class CocktailForm extends Component {
         this.setState({
             [event.target.name]: event.target.files[0]
         })
+    };
+
+    addIngredient = e => {
+        e.preventDefault();
+        this.setState({
+            ingredients: [...this.state.ingredients,
+                {name: '', amount: '', key: Math.random().toString()}
+            ]
+        })
+    };
+
+    ingredientInputChangeHandler = (e, ndx) => {
+        const ingredient = {...this.state.ingredients[ndx]};
+        ingredient[e.target.name] = e.target.value;
+        const ingredients = [...this.state.ingredients];
+        ingredients[ndx] = ingredient;
+        this.setState({ingredients});
+    };
+
+    removeIngredient = ndx => {
+        const ingredients = this.state.ingredients;
+
+        ingredients.splice(ndx, 1);
+        this.setState({ingredients});
     };
 
     render() {
@@ -64,17 +92,19 @@ class CocktailForm extends Component {
                     </Col>
                 </FormGroup>
 
-                <FormGroup row>
-                    <Label sm={2} for="ingredients">Ingredients</Label>
-                    <Col sm={10}>
-                        <Input
-                            type="text" required
-                            name="ingredients" id="ingredients"
-                            placeholder="Enter cocktail name"
-                            value={this.state.ingredients}
-                            onChange={this.inputChangeHandler}
-                        />
-                    </Col>
+                <FormGroup>
+                    Ingredients:
+                    {this.state.ingredients.map((ing, ndx) => (
+                        <div key={ing.key}>
+                            Name: <input type="text" name="name"
+                                         onChange={e => this.ingredientInputChangeHandler(e, ndx)} required/>
+                            Amount : <input type="text" name="amount"
+                                         onChange={e => this.ingredientInputChangeHandler(e, ndx)} required/>
+                            {ndx > 0 &&
+                            <button type="button" onClick={() => this.removeIngredient(ndx)}><b>X </b></button>}
+                        </div>
+                    ))}
+                    <button onClick={this.addIngredient} type="button">Add ingredient</button>
                 </FormGroup>
 
                 <FormGroup row>
